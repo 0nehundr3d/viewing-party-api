@@ -3,7 +3,7 @@
 set -o errexit
 
 bundle install
-# rails db:{migrate,seed}
+rails db:reset
 
 # If you're using a Free instance type, you need to
 # perform database migrations in the build command.
