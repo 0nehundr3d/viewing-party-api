@@ -9,6 +9,10 @@ Rails.application.routes.draw do
   # root "posts#index"
   namespace :api do
     namespace :v1 do
+      namespace :movie do
+        resources :top, only: :index
+      end
+
       resources :users, only: [:create, :index]
       resources :sessions, only: :create
     end
