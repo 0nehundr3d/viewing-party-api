@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       namespace :movie do
         resources :top, only: :index
       end
+      resources :movie, only: :index
 
       resources :users, only: [:create, :index]
       resources :sessions, only: :create
