@@ -16,7 +16,7 @@ describe "Viewing Party API", type: :request do
         it "returns a 201 Created and provies expected fields" do
             post "/api/v1/users/1/party", params: party_params, as: :json
             json = JSON.parse(response.body, symbolize_names: true)
-            binding.pry
+
             expect(response).to have_http_status(:created)
             expect(json[:data][:type]).to eq("viewing_party")
             expect(json[:data][:id]).to eq(ViewingParty.last.id.to_s)
