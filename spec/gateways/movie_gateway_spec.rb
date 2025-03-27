@@ -10,4 +10,14 @@ RSpec.describe MovieGateway do
             expect(movies.first).to be_instance_of(Movie)
         end
     end
+
+    describe "#top_movies" do
+        it "Should fetch the top 20 highest rated movies", :vcr do
+            movies = MovieGateway.top_movies
+
+            expect(movies).to be_an Array
+            expect(movies.length).to eq(20)
+            expect(movies.first).to be_instance_of(Movie)
+        end
+    end
 end
