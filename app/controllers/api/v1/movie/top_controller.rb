@@ -1,12 +1,7 @@
 class Api::V1::Movie::TopController < ApplicationController
     def index
-        conn = Faraday.new(url: "https://api.themoviedb.org") do |faraday|
-            faraday.headers["Authorization"] = Rails.application.credentials.tmdb[:read_token]
-        end
+        top_movies = MovieGateway.top_movies
 
-        response = conn.get("/3/movie/top_rated")
-        json = JSON.parse(response.body, symbolize_names: true)
-
-        render json: MovieSerializer.format_movie_list(json[:results])
+        render json: MovieSerializer.format_movie_list(top_movies)
     end
 end
