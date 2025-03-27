@@ -8,8 +8,8 @@ class Api::V1::MovieController < ApplicationController
             # response = conn.get("3/search/movie?query=#{params[:search]}")
             # json = JSON.parse(response.body,symbolize_names: true)
             search_results = MovieGateway.movie_search(params[:search])
-
-            render json: MovieSerializer.format_movie_list(search_results[:results])
+            
+            render json: MovieSerializer.format_movie_list(search_results)
         else
             render json: ErrorSerializer.format_error(ErrorMessage.new("A search is required for the movie endpoint", 400)), status: :bad_request
         end
