@@ -31,5 +31,17 @@ describe "Viewing Party API", type: :request do
             expect(json[:data][:attributes][:movie_title]).to eq("The Shawshank Redemption")
             expect(json[:data][:attributes][:invitees].count).to eq(3)
         end
+
+        it "returns a 400 bad request when not given all required params" do
+            3.times do |i|
+                User.create!(name: i, username: i, password: "testingUser")
+            end
+
+            post "/api/v1/users/#{User.first[:id]}/party", params: {name:"test"}, as: :json
+            json = JSON.parse(response.body, symbolize_names: true)
+            
+            expect(response).to have_http_status(:bad_request)
+            expect(json[:message]).to eq("Missing required params for creating viewing party")
+        end
     end
 end

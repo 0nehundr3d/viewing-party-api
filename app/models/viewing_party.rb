@@ -17,4 +17,9 @@ class ViewingParty < ApplicationRecord
             # binding.pry
         end
     end
+
+    def self.validate_params(params)
+        # binding.pry
+        return (["name", "start_time", "end_time", "movie_id", "movie_title"] - params.keys).empty?
+    end
 end

@@ -1,5 +1,8 @@
 class Api::V1::Users::PartyController < ApplicationController
     def create
+        if !ViewingParty.validate_params(params)
+            return render json: ErrorSerializer.format_error(ErrorMessage.new("Missing required params for creating viewing party", 400)), status: 400
+        end
         viewing_party = ViewingParty.create!(viewing_party_params)
         viewing_party.invite_users(params[:invitees], params[:user_id])
         render json: ViewingPartySerializer.serialize(viewing_party), status: 201
