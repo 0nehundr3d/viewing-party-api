@@ -41,7 +41,7 @@ describe "Viewing Party API", type: :request do
             json = JSON.parse(response.body, symbolize_names: true)
             
             expect(response).to have_http_status(:bad_request)
-            expect(json[:message]).to eq("Missing required params for creating viewing party")
+            expect(json[:message]).to eq("Missing required params start_time, end_time, movie_id, movie_title for creating viewing party")
         end
     end
 end
