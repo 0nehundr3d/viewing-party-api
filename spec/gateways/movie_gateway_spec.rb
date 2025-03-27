@@ -20,4 +20,10 @@ RSpec.describe MovieGateway do
             expect(movies.first).to be_instance_of(Movie)
         end
     end
+
+    describe "#fetch_movie_runtime" do
+        it "should return a movies runtime" do
+            expect(MovieGateway.fetch_movie_runtime(278)).to eq(142)
+        end
+    end
 end

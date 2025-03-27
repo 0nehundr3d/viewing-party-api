@@ -9,6 +9,13 @@ class MovieGateway
         poroify(response)
     end
 
+    def self.fetch_movie_runtime(movie_id)
+        response = conn.get("/3/movie/#{movie_id}")
+        json = JSON.parse(response.body, symbolize_names: true)
+
+        return json[:runtime]
+    end
+
     private
 
     def self.conn
