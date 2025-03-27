@@ -1,5 +1,5 @@
 class Api::V1::Users::PartyController < ApplicationController
     def create
-        binding.pry
+        # binding.pry
     end
 end
