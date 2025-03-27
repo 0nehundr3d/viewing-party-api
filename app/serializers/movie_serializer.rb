@@ -3,7 +3,8 @@ class MovieSerializer
   attributes :title, :vote_average
 
   def self.format_movie_list(movies)
-    { data:
+    { 
+      data:
         movies.map do |movie|
           {
             id: movie[:id],
