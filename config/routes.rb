@@ -15,7 +15,7 @@ Rails.application.routes.draw do
       resources :movie, only: :index
 
       resources :users, only: [:create, :index] do
-        resources :party, only: :create
+        resources :party, only: :create, controller: "users/party"
       end
       resources :sessions, only: :create
     end
