@@ -6,6 +6,10 @@ class Api::V1::Users::PartyController < ApplicationController
         end
 
         party_duration = Time.parse(params[:end_time]) - Time.parse(params[:start_time])
+        if party_duration < 0
+            return render json: ErrorSerializer.format_error(ErrorMessage.new("Can not create a viewing party with and end time before its begin time", 400)), status: 400
+        end
+
         movie_duration = MovieGateway.fetch_movie_runtime(params[:movie_id])
         if (party_duration / 60) < movie_duration
             return render json: ErrorSerializer.format_error(ErrorMessage.new("Can not create a viewing party with less duration than the movie being viewed (#{movie_duration} minutes)", 400)), status: 400

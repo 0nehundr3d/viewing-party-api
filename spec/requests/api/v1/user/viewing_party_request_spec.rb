@@ -57,5 +57,21 @@ describe "Viewing Party API", type: :request do
             expect(response).to have_http_status(:bad_request)
             expect(json[:message]).to eq("Can not create a viewing party with less duration than the movie being viewed (142 minutes)")
         end
+
+        it "returns a 400 bad request when the party ends before it starts" do
+            params = {
+                "name": "Juliet's Bday Movie Bash!",
+                "end_time": "2025-02-01 10:00:00",
+                "start_time": "2025-02-01 10:30:00",
+                "movie_id": 278,
+                "movie_title": "The Shawshank Redemption",
+                "invitees": User.all.pluck(:id)
+            }
+            post "/api/v1/users/#{User.first[:id]}/party", params: params, as: :json
+            json = JSON.parse(response.body, symbolize_names: true)
+
+            expect(response).to have_http_status(:bad_request)
+            expect(json[:message]).to eq("Can not create a viewing party with and end time before its begin time")
+        end
     end
 end
