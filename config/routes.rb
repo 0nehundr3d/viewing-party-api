@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
       resources :users, only: [:create, :index] do
         resources :party, only: :create, controller: "users/party"
+        patch "/party/:id", to: "users/party#update"
       end
       resources :sessions, only: :create
     end
