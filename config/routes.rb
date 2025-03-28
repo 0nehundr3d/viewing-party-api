@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       namespace :movie do
         resources :top, only: :index
       end
-      resources :movie, only: :index
+      resources :movie, only: [:index, :show]
 
       resources :users, only: [:create, :index] do
         resources :party, only: :create, controller: "users/party"
