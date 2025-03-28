@@ -16,6 +16,17 @@ class MovieGateway
         return json[:runtime]
     end
 
+    def self.fetch_movie_details(movie_id)
+        details = conn.get("/3/movie/#{movie_id}")
+        credits = conn.get("/3/movie/#{movie_id}/credits")
+        reviews = conn.get("/3/movie/#{movie_id}/reviews")
+        json = JSON.parse(details.body, symbolize_names: true)
+        .merge(JSON.parse(credits.body, symbolize_names: true))
+        .merge(JSON.parse(reviews.body, symbolize_names: true))
+
+        return Movie.new(json)
+    end
+
     private
 
     def self.conn
