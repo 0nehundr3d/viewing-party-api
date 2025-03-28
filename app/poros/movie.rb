@@ -2,8 +2,7 @@ class Movie
     attr_reader :title,
                 :vote_average,
                 :id,
-                :summary,
-                :cast
+                :summary
 
     def initialize(movie_hash)
         @title = movie_hash[:title]
@@ -12,7 +11,7 @@ class Movie
         @runtime = movie_hash[:runtime]
         @genres = movie_hash[:genres]
         @summary = movie_hash[:overview]
-        @cast = movie_hash[:cast][0..9]
+        @cast = movie_hash[:cast]
         @reviews = movie_hash[:results]
         @id = movie_hash[:id]
     end
@@ -37,5 +36,9 @@ class Movie
 
     def total_reviews
         @reviews.count
+    end
+
+    def cast 
+        @cast[0..9]
     end
 end
