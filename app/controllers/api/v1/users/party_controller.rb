@@ -25,7 +25,7 @@ class Api::V1::Users::PartyController < ApplicationController
 
     def update
         party = ViewingParty.find(params[:id])
-        user = User.find(params[:invitees_user_id])
+        User.find(params[:invitees_user_id])
         party.invite_users([params[:invitees_user_id]], params[:user_id])
         render json: ViewingPartySerializer.serialize(party)
     end
