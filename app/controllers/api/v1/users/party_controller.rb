@@ -1,4 +1,6 @@
 class Api::V1::Users::PartyController < ApplicationController
+    rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
+
     def create
         invalid_params = ViewingParty.validate_params(params)
         if !invalid_params.empty?
@@ -21,9 +23,21 @@ class Api::V1::Users::PartyController < ApplicationController
         render json: ViewingPartySerializer.serialize(viewing_party), status: 201
     end
 
+    def update
+        party = ViewingParty.find(params[:id])
+        User.find(params[:invitees_user_id])
+        party.invite_users([params[:invitees_user_id]], params[:user_id])
+        render json: ViewingPartySerializer.serialize(party)
+    end
+
     private
 
     def viewing_party_params
         params.permit(:name, :start_time, :end_time, :movie_id, :movie_title)
+    end
+
+    def not_found_response(exception)
+        # binding.pry
+        render json: ErrorSerializer.format_error(ErrorMessage.new("Could not find #{exception.model} with id #{exception.id}", 404)), status: :not_found
     end
 end
