@@ -1,24 +1,24 @@
 require "rails_helper"
 
 describe "Viewing Party API", type: :request do
+    before :each do
+        3.times do |i|
+            User.create!(name: i, username: i, password: "testingUser")
+        end
+    end
+
+    let(:party_params) do
+        {
+            "name": "Juliet's Bday Movie Bash!",
+            "start_time": "2025-02-01 10:00:00",
+            "end_time": "2025-02-01 14:30:00",
+            "movie_id": 278,
+            "movie_title": "The Shawshank Redemption",
+            "invitees": User.all.pluck(:id)
+        }
+    end
+
     describe "Create viewing party endpoint" do
-        before :each do
-            3.times do |i|
-                User.create!(name: i, username: i, password: "testingUser")
-            end
-        end
-
-        let(:party_params) do
-            {
-                "name": "Juliet's Bday Movie Bash!",
-                "start_time": "2025-02-01 10:00:00",
-                "end_time": "2025-02-01 14:30:00",
-                "movie_id": 278,
-                "movie_title": "The Shawshank Redemption",
-                "invitees": User.all.pluck(:id)
-            }
-        end
-
         it "returns a 201 Created and provies expected fields" do
             post "/api/v1/users/#{User.first[:id]}/party", params: party_params, as: :json
             json = JSON.parse(response.body, symbolize_names: true)
@@ -72,6 +72,19 @@ describe "Viewing Party API", type: :request do
 
             expect(response).to have_http_status(:bad_request)
             expect(json[:message]).to eq("Can not create a viewing party with and end time before its begin time")
+        end
+    end
+
+    describe "Add users to viewing party" do
+        it "Should be able to add users to an existing viewing party" do
+            post "/api/v1/users/#{User.first[:id]}/party", params: party_params, as: :json
+            new_user = User.create!(name: "test user", username: "test user", password: "test")
+            patch "/api/v1/users/#{User.first[:id]}/party/#{ViewingParty.first[:id]}", params: { "invitees_user_id": new_user.id }, as: :json
+            json = JSON.parse(response.body, symbolize_names: true)
+            # binding.pry
+
+            expect(response).to have_http_status :ok 
+            expect(ViewingParty.first.users.last).to be(new_user)
         end
     end
 end
