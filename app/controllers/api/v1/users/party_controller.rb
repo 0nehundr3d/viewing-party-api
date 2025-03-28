@@ -21,6 +21,12 @@ class Api::V1::Users::PartyController < ApplicationController
         render json: ViewingPartySerializer.serialize(viewing_party), status: 201
     end
 
+    def update
+        party = ViewingParty.find(params[:id])
+        party.invite_users([params[:invitees_user_id]], params[:user_id])
+        render json: ViewingPartySerializer.serialize(party)
+    end
+
     private
 
     def viewing_party_params
