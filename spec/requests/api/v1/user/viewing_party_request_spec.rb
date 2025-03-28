@@ -94,5 +94,14 @@ describe "Viewing Party API", type: :request do
             expect(response).to have_http_status :not_found
             expect(json[:message]).to eq("Could not find ViewingParty with id 999")
         end
+
+        it "should return a 404 when trying to add a non existant user to a party" do
+            post "/api/v1/users/#{User.first[:id]}/party", params: party_params, as: :json
+            patch "/api/v1/users/#{User.first[:id]}/party/#{ViewingParty.first[:id]}", params: { "invitees_user_id": 9999999 }, as: :json
+            json = JSON.parse(response.body, symbolize_names: true)
+            
+            expect(response).to have_http_status :not_found
+            expect(json[:message]).to eq("Could not find User with id 9999999")
+        end
     end
 end
