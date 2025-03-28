@@ -76,7 +76,7 @@ describe "Viewing Party API", type: :request do
     end
 
     describe "Add users to viewing party" do
-        it "Should be able to add users to an existing viewing party" do
+        it "should be able to add users to an existing viewing party" do
             post "/api/v1/users/#{User.first[:id]}/party", params: party_params, as: :json
             new_user = User.create!(name: "test user", username: "test user", password: "test")
             patch "/api/v1/users/#{User.first[:id]}/party/#{ViewingParty.first[:id]}", params: { "invitees_user_id": new_user.id }, as: :json
@@ -85,6 +85,14 @@ describe "Viewing Party API", type: :request do
 
             expect(response).to have_http_status :ok 
             expect(json[:data][:attributes][:invitees].last).to eq({:id=>new_user.id, :name=>"test user", :username=>"test user"})
+        end
+
+        it "should return a 404 when trying to add to a non existant party" do
+            patch "/api/v1/users/#{User.first[:id]}/party/999", params: { "invitees_user_id": 26 }, as: :json
+            json = JSON.parse(response.body, symbolize_names: true)
+            # binding.pry
+            expect(response).to have_http_status :not_found
+            expect(json[:message]).to eq("Could not find ViewingParty with id 999")
         end
     end
 end

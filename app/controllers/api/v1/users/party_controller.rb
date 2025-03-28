@@ -1,4 +1,6 @@
 class Api::V1::Users::PartyController < ApplicationController
+    rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
+
     def create
         invalid_params = ViewingParty.validate_params(params)
         if !invalid_params.empty?
@@ -31,5 +33,10 @@ class Api::V1::Users::PartyController < ApplicationController
 
     def viewing_party_params
         params.permit(:name, :start_time, :end_time, :movie_id, :movie_title)
+    end
+
+    def not_found_response(exception)
+        # binding.pry
+        render json: ErrorSerializer.format_error(ErrorMessage.new("Could not find #{exception.model} with id #{exception.id}", 404)), status: :not_found
     end
 end
