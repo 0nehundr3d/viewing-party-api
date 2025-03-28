@@ -14,4 +14,8 @@ class Api::V1::MovieController < ApplicationController
             render json: ErrorSerializer.format_error(ErrorMessage.new("A search is required for the movie endpoint", 400)), status: :bad_request
         end
     end
+
+    def show
+        render json: MovieSerializer.serialize_details(MovieGateway.fetch_movie_details(params[:id]))
+    end
 end
