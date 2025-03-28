@@ -84,7 +84,7 @@ describe "Viewing Party API", type: :request do
             # binding.pry
 
             expect(response).to have_http_status :ok 
-            expect(ViewingParty.first.users.last).to be(new_user)
+            expect(json[:data][:attributes][:invitees].last).to eq({:id=>new_user.id, :name=>"test user", :username=>"test user"})
         end
     end
 end
