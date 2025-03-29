@@ -87,4 +87,27 @@ RSpec.describe "Users API", type: :request do
       expect(json[:data][0][:attributes]).to_not have_key(:api_key)
     end
   end
+
+  describe "Show User endpoint" do
+    it "retrieves one user but does not share any sensitive data" do
+      host = User.create!(name: "Tom", username: "myspace_creator", password: "test123")
+      test_user = User.create!(name: "Oprah", username: "oprah", password: "abcqwerty")
+      party = ViewingParty.create!(name:"Toms viewing party",
+                                  start_time:Time.now(),
+                                  end_time:Time.now() + 3.hours,
+                                  movie_id:278,
+                                  movie_title:"The Shawshank Redemption")
+
+      party.invite_users(User.all, User.first[:id])
+
+      get "/api/v1/users/#{test_user[:id]}"
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      expect(json[:data][:attributes]).to have_key(:name)
+      expect(json[:data][:attributes]).to have_key(:username)
+      expect(json[:data][:attributes][:viewing_parties_hosted]).to be empty
+      expect(json[:data][:attributes][:viewing_parties_invited].count).to eq(1)
+      expect(json[:data][:attributes][:viewing_parties_invited][:host_id]).to eq(host[:id])
+    end
+  end
 end
