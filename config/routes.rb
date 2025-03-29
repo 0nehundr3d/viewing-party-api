@@ -14,7 +14,7 @@ Rails.application.routes.draw do
       end
       resources :movie, only: [:index, :show]
 
-      resources :users, only: [:create, :index] do
+      resources :users, only: [:create, :index, :show] do
         resources :party, only: :create, controller: "users/party"
         patch "/party/:id", to: "users/party#update"
       end
