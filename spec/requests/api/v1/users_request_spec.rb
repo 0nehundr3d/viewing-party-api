@@ -98,7 +98,14 @@ RSpec.describe "Users API", type: :request do
                                   movie_id:278,
                                   movie_title:"The Shawshank Redemption")
 
-      party.invite_users(User.all.pluck(:id), User.first[:id])
+      party2 = ViewingParty.create!(name:"Oprahs viewing party",
+                                  start_time:Time.now(),
+                                  end_time:Time.now() + 3.hours,
+                                  movie_id:278,
+                                  movie_title:"The Shawshank Redemption")                            
+
+      party.invite_users(User.all.pluck(:id), host.id)
+      party2.invite_users(User.all.pluck(:id), test_user.id)
 
       get "/api/v1/users/#{test_user[:id]}"
       json = JSON.parse(response.body, symbolize_names: true)
@@ -108,7 +115,12 @@ RSpec.describe "Users API", type: :request do
       expect(json[:data][:attributes]).to_not have_key(:password)
       expect(json[:data][:attributes]).to_not have_key(:password_digest)
       expect(json[:data][:attributes]).to_not have_key(:api_key)
-      expect(json[:data][:attributes][:viewing_parties_hosted]).to eq([])
+      expect(json[:data][:attributes][:viewing_parties_hosted][0]).to have_key(:host_id)
+      expect(json[:data][:attributes][:viewing_parties_hosted][0]).to have_key(:name)
+      expect(json[:data][:attributes][:viewing_parties_hosted][0]).to have_key(:start_time)
+      expect(json[:data][:attributes][:viewing_parties_hosted][0]).to have_key(:end_time)
+      expect(json[:data][:attributes][:viewing_parties_hosted][0]).to have_key(:movie_id)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:movie_title)
       expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:host_id)
       expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:name)
       expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:start_time)
