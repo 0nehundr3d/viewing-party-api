@@ -8,11 +8,11 @@ class ViewingParty < ApplicationRecord
     has_many :users, through: :viewing_party_users
 
     def invite_users(users, host)
-        users.each do |user_id|
+        users.each do |user|
             ViewingPartyUser.create!(
                                     viewing_party: self,
-                                    user: User.where(id: user_id)[0],
-                                    host: user_id == host.to_i
+                                    user: user,
+                                    host: user.id == host.to_i
                                     )
             # binding.pry
         end
