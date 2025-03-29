@@ -105,7 +105,7 @@ RSpec.describe "Users API", type: :request do
 
       expect(json[:data][:attributes]).to have_key(:name)
       expect(json[:data][:attributes]).to have_key(:username)
-      expect(json[:data][:attributes][:viewing_parties_hosted]).to be empty
+      expect(json[:data][:attributes][:viewing_parties_hosted]).to eq([])
       expect(json[:data][:attributes][:viewing_parties_invited].count).to eq(1)
       expect(json[:data][:attributes][:viewing_parties_invited][:host_id]).to eq(host[:id])
     end
