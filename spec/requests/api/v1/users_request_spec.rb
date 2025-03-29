@@ -98,7 +98,7 @@ RSpec.describe "Users API", type: :request do
                                   movie_id:278,
                                   movie_title:"The Shawshank Redemption")
 
-      party.invite_users(User.all, User.first[:id])
+      party.invite_users(User.all.pluck(:id), User.first[:id])
 
       get "/api/v1/users/#{test_user[:id]}"
       json = JSON.parse(response.body, symbolize_names: true)
