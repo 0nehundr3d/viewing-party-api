@@ -128,5 +128,13 @@ RSpec.describe "Users API", type: :request do
       expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:movie_id)
       expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:movie_title)
     end
+
+    it "Should return a 404 error when trying to access an invalid user id" do
+      get "/api/v1/users/9999999"
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to have_http_status :not_found
+      expect(json[:message]).to eq("Could not find User with id 9999999")
+    end
   end
 end
