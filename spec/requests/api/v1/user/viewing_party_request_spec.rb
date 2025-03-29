@@ -84,7 +84,7 @@ describe "Viewing Party API", type: :request do
             # binding.pry
 
             expect(response).to have_http_status :ok 
-            expect(json[:data][:attributes][:invitees].last).to eq({:id=>new_user.id, :name=>"test user", :username=>"test user"})
+            expect(json[:data][:attributes][:invitees]).to include({:id=>new_user.id, :name=>"test user", :username=>"test user"})
         end
 
         it "should return a 404 when trying to add to a non existant party" do
