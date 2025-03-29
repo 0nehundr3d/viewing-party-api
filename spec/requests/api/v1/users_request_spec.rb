@@ -87,4 +87,54 @@ RSpec.describe "Users API", type: :request do
       expect(json[:data][0][:attributes]).to_not have_key(:api_key)
     end
   end
+
+  describe "Show User endpoint" do
+    it "retrieves one user but does not share any sensitive data" do
+      host = User.create!(name: "Tom", username: "myspace_creator", password: "test123")
+      test_user = User.create!(name: "Oprah", username: "oprah", password: "abcqwerty")
+      party = ViewingParty.create!(name:"Toms viewing party",
+                                  start_time:Time.now(),
+                                  end_time:Time.now() + 3.hours,
+                                  movie_id:278,
+                                  movie_title:"The Shawshank Redemption")
+
+      party2 = ViewingParty.create!(name:"Oprahs viewing party",
+                                  start_time:Time.now(),
+                                  end_time:Time.now() + 3.hours,
+                                  movie_id:278,
+                                  movie_title:"The Shawshank Redemption")                            
+
+      party.invite_users(User.all.pluck(:id), host.id)
+      party2.invite_users(User.all.pluck(:id), test_user.id)
+
+      get "/api/v1/users/#{test_user[:id]}"
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      expect(json[:data][:attributes]).to have_key(:name)
+      expect(json[:data][:attributes]).to have_key(:username)
+      expect(json[:data][:attributes]).to_not have_key(:password)
+      expect(json[:data][:attributes]).to_not have_key(:password_digest)
+      expect(json[:data][:attributes]).to_not have_key(:api_key)
+      expect(json[:data][:attributes][:viewing_parties_hosted][0]).to have_key(:host_id)
+      expect(json[:data][:attributes][:viewing_parties_hosted][0]).to have_key(:name)
+      expect(json[:data][:attributes][:viewing_parties_hosted][0]).to have_key(:start_time)
+      expect(json[:data][:attributes][:viewing_parties_hosted][0]).to have_key(:end_time)
+      expect(json[:data][:attributes][:viewing_parties_hosted][0]).to have_key(:movie_id)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:movie_title)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:host_id)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:name)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:start_time)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:end_time)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:movie_id)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:movie_title)
+    end
+
+    it "Should return a 404 error when trying to access an invalid user id" do
+      get "/api/v1/users/9999999"
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to have_http_status :not_found
+      expect(json[:message]).to eq("Could not find User with id 9999999")
+    end
+  end
 end
