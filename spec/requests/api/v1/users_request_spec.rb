@@ -105,9 +105,16 @@ RSpec.describe "Users API", type: :request do
 
       expect(json[:data][:attributes]).to have_key(:name)
       expect(json[:data][:attributes]).to have_key(:username)
+      expect(json[:data][:attributes]).to_not have_key(:password)
+      expect(json[:data][:attributes]).to_not have_key(:password_digest)
+      expect(json[:data][:attributes]).to_not have_key(:api_key)
       expect(json[:data][:attributes][:viewing_parties_hosted]).to eq([])
-      expect(json[:data][:attributes][:viewing_parties_invited].count).to eq(1)
-      expect(json[:data][:attributes][:viewing_parties_invited][:host_id]).to eq(host[:id])
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:host_id)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:name)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:start_time)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:end_time)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:movie_id)
+      expect(json[:data][:attributes][:viewing_parties_invited][0]).to have_key(:movie_title)
     end
   end
 end
