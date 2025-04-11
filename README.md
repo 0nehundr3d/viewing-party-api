@@ -12,7 +12,11 @@ Spend some time familiarizing yourself with the functionality and structure of t
 
 Run the application and test out some endpoints: `rails s`
 
-| Purpose | URL path | Verb | Required Data | Sample Sucessful Response | Sample Unsuccessful Response |
-|---------|----------|------|---------------|---------------------------|------------------------------|
-| Top Rated Movies | `/api/v1/movie/top` | GET | `N/A` | `{"data": [{"id": 278,"type": "movie","attributes": {"title": "The Shawshank Redemption","vote_average": 8.707}},{"id": 238,"type": "movie","attributes": { "title": "The Godfather","vote_average": 8.686}}]}` | `N/A`
-| Movie Search | `api/v1/movie` | GET | `?search=query` | `{"page":1,"results":[{"adult":false,"backdrop_path":"/icmmSD4vTTDKOq2vvdulafOGw93.jpg","genre_ids":[28,878],"id":603,"original_language":"en","original_title":"TheMatrix","overview":"Setinthe22ndcentury,TheMatrixtellsthestoryofacomputerhackerwhojoinsagroupofundergroundinsurgentsfightingthevastandpowerfulcomputerswhonowruletheearth.","popularity":30.7461,"poster_path":"/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg","release_date":"1999-03-31","title":"TheMatrix","video":false,"vote_average":8.224,"vote_count":26246}]}` | `N/A`
+| Purpose | URL path | Verb | Required Data |
+|---------|----------|------|---------------|
+| Top Rated Movies | `/api/v1/movie/top` | GET | `N/A` |
+| Movie Search | `/api/v1/movie` | GET | `?search=query` |
+| Create a Viewing Party | `/api/v1/users/:user_id/party` | POST | `{"name":name,"start_time": start_time, "end_time": end_time, "movie_id": movie_id, "movie_title": movie_title, "invitees": [user_id, user_id, user_id]}` |
+| Add User to Viewing Party | `/api/v1/users/:user_id/party/:party_id` | PATCH | `{invitees_user_id: user_id}` |
+| Movie Details | `/api/v2/movie/:movie_id` | GET | `N/A` |
+| Retrieve User Profile | `/api/v1/users/:user_id` | GET | `N/A` |
