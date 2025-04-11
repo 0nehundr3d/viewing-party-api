@@ -22,19 +22,19 @@ RSpec.describe MovieGateway do
     end
 
     describe "#fetch_movie_runtime" do
-        it "should return a movies runtime" do
+        it "should return a movies runtime", :vcr do
             expect(MovieGateway.fetch_movie_runtime(278)).to eq(142)
         end
     end
 
     describe "#fetch_movie_details" do
-        it "should return details of a movie" do
+        it "should return details of a movie", :vcr do
             movie = MovieGateway.fetch_movie_details(278)
 
             expect(movie).to be_a(Movie)
             expect(movie.title).to eq("The Shawshank Redemption")
             expect(movie.release_year).to eq(1994)
-            expect(movie.vote_average).to eq(8.709)
+            expect(movie.vote_average).to eq(8.708)
             expect(movie.runtime).to eq("2 hours, 22 minutes")
             expect(movie.genres).to eq(["Drama", "Crime"])
             expect(movie.summary).to eq("Imprisoned in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope.")
